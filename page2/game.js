@@ -21,6 +21,11 @@ let person_state = false;
 let currentMusic;
 
 function preload() {
+  h = loadImage('data/h.jpg');
+  mouse = loadImage('data/mouse.png');
+  q = loadImage('data/q.png');
+  e = loadImage('data/e.png');
+  r = loadImage('data/r.png');
   person_sitting = loadImage('data/person_sitting.png');
   rubbish_bin = loadImage('data/rubbish_bin.png');
   cat_food_full = loadImage('data/cat_food_full.png');
@@ -32,7 +37,7 @@ function preload() {
   hospital_treatment = loadImage('data/hospital_treatment.jpg');
   hospital_animal = loadImage('data/hospital_animal.jpg');
   hospital_human = loadImage('data/hospital_human.jpg');
-
+  wasd = loadImage('data/wasd.jpg');
   room = loadImage('data/room.jpg');
   glass = loadImage('data/window.png');
 
@@ -135,9 +140,28 @@ function setup() {
     tomato,
     chocolate,
   ];
-
+  cat_left_frames = [];
+  for(let i = 0; i < 92; i++){
+    let imgPath = "walking_cat_left/trim.1ACDE6D3-9803-492A-A950-6ED9E06DE795-" + i + ".png";
+    console.log(imgPath);
+    let currentIMG = loadImage(imgPath);
+    cat_left_frames.push(currentIMG)
+  }
+  cat_right_frames = [];
+  for(let i = 0; i < 92; i++){
+    let imgPath = "walking_cat_right/trim.1ACDE6D3-9803-492A-A950-6ED9E06DE795-" + i + ".png";
+    console.log(imgPath);
+    let currentIMG = loadImage(imgPath);
+    cat_right_frames.push(currentIMG)
+  }
 
 currentMusic = cat_begging;
+mouse.resize(30,30);
+  q.resize(30,30);
+  h.resize(30,30);
+  e.resize(30,30);
+  r.resize(30,30);
+  wasd.resize(60,0);
   hospital_treatment.resize(width,0);
   hospital_animal.resize(0,height);
   hospital_human.resize(0,height);
@@ -218,7 +242,7 @@ function draw() {
       fail("With the reduced number of rubbish bins in the city, \nit's harder for you to find food.");
       break;
     case "fail_overfead":
-      fail("You don't know how to resist the temptation to eat. \nWith your soaring weight and increased demand for food, it's hard to survive");
+      fail("You don't know how to resist the temptation to eat.\nWith the soaring weight and increased demand for food, it's harder for you to survive");
       break;
     case "fail_car":
       fail("Today you want to cross the road as usual.\n But before you can react, the car is already close to you.");
@@ -269,11 +293,11 @@ function hospital_enter(){
   }
 if(hospital_type ==1){
   image(hospital_animal,positionX_room+width/2,height/2);
-  instruction("Press r to exit",60,'green');
-  instruction("Press h to be treated",90,'green');
+  instruction(r,"exit",60,'green');
+  instruction(h,"to be treated",90,'green');
   if(key == 'h'){
     image(hospital_treatment,width/2,height/2);
-    instruction("Press r to exit",60,'green');
+    instruction(r,"exit",60,'green');
     
     script.update("You:", "Ahh, now I feel much better.",1000,'black');
     health = 100;
@@ -282,8 +306,8 @@ if(hospital_type ==1){
 
 else{
   image(hospital_human,positionX_room+width/2,height/2);
-  instruction("Press r to exit",60,'green');
-  instruction("Press 'ad' to move",90,'green');
+  instruction(r,"exit",60,'green');
+  instruction(wasd,"move",90,'green');
   if(keyIsPressed==true&&key == 'r'){script.update('System:',"It's a hospital for human.\n If you keep looking, you may find a animal hospital.",3500,'red');}
   
 }
@@ -299,10 +323,11 @@ function cat_food_display(NUM,X,Y){
   if(cat_food_distribution == NUM&& cat_food_state == 1){
         
     image(cat_food_full,X,Y);
-    script.update("You:", "Ah, I used to eat such food quite often\nbefore I had to stray.\nBut now it's all gone...",1000,'black');
+    script.update("You:", "Ah, I used to eat such food quite often\nbefore I had to stray.\nI really like its taste!",1000,'black');
   }
-  else if(cat_food_distribution == NUM){image(cat_food_empty,X,Y);
-    script.update("You:", "There's an empty bowl!\nI also owned such bowl...before I left home",1000,'black');
+  else if(cat_food_distribution == NUM){
+    image(cat_food_empty,X,Y);
+    script.update("You:", "There's no food in this bowl...",1000,'black');
   }
 
   if(mouseIsPressed == true&&dist(mouseX,mouseY,X,Y)<cat_food_full.width/2&&cat_food_state==1){cat_food_state = 0;
@@ -318,8 +343,8 @@ function school_enter(){
       image(school_left,0,0);
 
       cat_food_display(1,410  ,500 )
-      instruction("click the food on the ground\nclick 'r' to exit school",60,'green');
-      
+      instruction(mouse,"click food bowl",60,'green');
+      instruction(r,"exit",85,'green')
     }
     else if(latestNewKeyPress == 'd'){
       image(school_right,0,0);
@@ -328,17 +353,18 @@ function school_enter(){
       cat_food_display(3,70 , 673 )
       cat_food_display(4,300, 494.5 )
 
-      instruction("click the food on the ground\nclick 'r' to exit school",60,'green');}
-
+      instruction(mouse,"click the food on the ground",60,'green');
+      instruction(r,"exit",85,'green')
+    }
     else if(latestNewKeyPress == 's'){
       image(school_center2,0,0);
-      instruction('click r to exit',90,'green');
+      instruction(r,'exit',90,'green');
       if(person_state == true){
         imageMode(CENTER);
         image(person_sitting,550,500);
         imageMode(CORNER);
         script.update("Man:", "There's a cat!!\nHello there, little cat",3500,'black');
-        instruction('click the man to play with him',60,'red');
+        instruction(mouse,'play with him',60,'red');
         
         if(mouseIsPressed&&dist(mouseX,0,550,0)<person_sitting.width/2&&dist(0,mouseY,0,500)<person_sitting.height/2){
           state = 'win_campus_cat';
@@ -346,7 +372,7 @@ function school_enter(){
       }
     }
     else if(latestNewKeyPress == 'w'||latestNewKeyPress == 'e'){image(school_center1,0,0); 
-       instruction("click 'wasd' to wander around\nclick 'r' to exit school",90,'green');}
+       instruction(wasd,"wander around",90,'green');}
     else if(latestNewKeyPress == 'r'){state = 'ongoing';
     script.update("You:", "Anyway, it's time to continue searching for food.",3500,'black');
     }
@@ -379,8 +405,8 @@ function house_enter(){
 
   pop();
 
-  instruction("press 'wasd' to inspect the house",60,'green');
-  instruction('press "r" to exit',95,'green');
+  instruction(wasd,"inspect the house",60,'green');
+  instruction(r,'exit',95,'green');
 
   imageMode(CORNER);
 }
@@ -425,7 +451,7 @@ class Food {
 
     if(dist(this.x, 0, character.x, 0) < 30 &&
     dist(0, this.y, 0, character.y) < 15&&this.state == true){
-      instruction('click q to pick up '+ this.name,90,'red');
+      instruction(q,'pick up '+ this.name,character.y+50,'red');
     }
 
     if (
@@ -463,13 +489,15 @@ class Food {
   }
 }
 
-function instruction(SENTENCE,Y,COLOR){
+function instruction(IMAGE,SENTENCE,Y,COLOR){
   push();
-  textAlign(CENTER);
+  textAlign(LEFT,CENTER);
+  imageMode(CENTER);
   fill(COLOR);
   stroke('orange');
-  textSize(40);
-  text(SENTENCE,width/2,Y);
+  textSize(35);
+  image(IMAGE,width/2-100,Y);
+  text(SENTENCE,IMAGE.width/2+width/2-100,Y);
   pop();
 }
 
@@ -657,21 +685,24 @@ function keyPressed() {
   }
 }
 
+
 class Cat {
   constructor() {
     this.x = width / 2+20;
     this.y = 550;
     this.speedY = 0;
     this.speedX = 0;
-    this.rotation = 0;
     this.direction = "left";
     this.scale = 1;
     this.interaction = false;
+    this.frame = 0;
+    this.currentFrame = 0;
+    
   }
 
   update() {
     this.speedX = lerp(this.speedX, targetSpeedX, 0.05);
-
+    
     if (keyIsPressed) {
       if (latestNewKeyPress == "d") {
         targetSpeedX = -4;
@@ -696,12 +727,8 @@ class Cat {
     this.scale = map(this.y, 500, height, 0.5, 1);
 
     this.speedY *= this.scale;
-
-    if (this.speedX == 0) {
-      this.rotation = 0;
-    } else {
-      this.rotation += 4;
-    }
+    this.frame+=abs(this.speedX)*0.3;
+    this.currentFrame = int(this.frame%cat_left_frames.length);
 
     if (this.speedX > 0 && targetSpeedX > 0) {
       this.direction = "left";
@@ -714,20 +741,17 @@ class Cat {
   }
 
   display() {
-    let oci = map(abs(this.speedX), 0, 4, 0, 0.2);
     imageMode(CENTER);
     push();
     translate(this.x, this.y);
-
-    rotate(oci * sin(radians(this.rotation)));
-    scale(this.scale);
+    scale(this.scale*0.08);
 
     if (this.direction == "left") {
       
-      image(cat_left, 0, 0);
+      image(cat_left_frames[this.currentFrame], 0, 0);
     }
     if (this.direction == "right") {
-      image(cat_right, 0, 0);
+      image(cat_right_frames[this.currentFrame], 0, 0);
     }
     pop();
     imageMode(CORNER);
@@ -775,7 +799,7 @@ class Building {
 
   enter(){
     if(character.x>this.x&&character.x<this.x+this.building.width&&character.y>streetline&&character.y<streetline+30){
-      instruction("click e to enter " + this.buildingType,90,'red');
+      instruction(e,"enter " + this.buildingType,character.y+50,'red');
       if(key == 'e'){state = this.buildingType;
         positionX_room = 0;
         positionY_room = 0;
@@ -795,7 +819,7 @@ class Building {
           
           case 'school': script.update('You:',"Where is this place?\n Anyway, the human here seems safe\nSomething good may happen...Who knows?",3000,color(0));
           break;
-          case 'house': script.update('You:',"This place reminds me of the old day\n when I live with my human friends.\n But I'm not part of it...anymore \n Will I wake up from this nightmare...ever?",6500,color(0));
+          case 'house': script.update('You:',"This place reminds me of the old day\n when I live with my human friends.\n But I'm not part of it...anymore \n ",6500,color(0));
           break;
           case 'hospital': 
           if(hospital_type == 1){script.update('Vet:',"Ohhh, you're injured. Poor little kitty.\n Don't worry, you'll be ok soon",4000,color(0));}
@@ -818,7 +842,7 @@ class Building {
    display_rubbish_bin(){if(this.rubbish_bin_state == true){this.rubbish_bin.display();}}
   update() {
     this.x += character.speedX*character.scale;
-    if(this.rubbish_bin_state == true){this.rubbish_bin.update();}
+    if(this.rubbish_bin_state == true){this.rubbish_bin.update();} 
   }
 }
 

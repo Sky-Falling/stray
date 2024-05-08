@@ -1,7 +1,7 @@
 let heightOfscrollDiv = document.getElementById("scrollDiv").scrollHeight;
 console.log("heightOfscrollDiv", heightOfscrollDiv)
 let catFrames = [];
-
+let currentMusic;
 function preload(){
   for(let i = 1; i < 92; i++){
     let imgPath = "walking_cat/trim.1ACDE6D3-9803-492A-A950-6ED9E06DE795-" + i + ".png";
@@ -13,12 +13,20 @@ function preload(){
   house = loadImage('house.jpg');
   street = loadImage('street.jpg');
   balcony = loadImage('balcony.png');
+  song1 = loadSound('阳光下安静的猫.mp3');
+  song2 = loadSound('月世界.mp3');
+  song3 = loadSound('RachelTheme.mp3');
+  song4 = loadSound('NYA.mp3');
 }
+
+
+
 
 function setup() {
 
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent("canvasContainer");
+
   walking_cat = new Cat(catFrames);
   availableScrollSpace = heightOfscrollDiv - windowHeight;
   sunny_afternoon.resize(1.5*width,0);
@@ -27,18 +35,43 @@ function setup() {
   balcony.resize(width,0);
   let currentImage = house;
   script = new Script();
+  currentSong = song1;
+}
+
+
+function stopSongs(songs){
+  for(let song of songs){
+    // console.log(song)
+    song.currentTime = 0;
+    song.stop()
+  }
+
 }
 
 function draw() {
   background(0);
   let scrollDistance = window.scrollY;
   let scrollPercentage = scrollDistance/availableScrollSpace;
-
+  
   let dogY = map(scrollPercentage, 0, 1, 0, 4*catFrames.length);
   walking_cat.update(dogY,0.15);
 
   let imageMode = floor(map(scrollPercentage,0,1,0,4));
-  if(imageMode == 0){ currentImage = sunny_afternoon;
+  
+
+ 
+ 
+
+  if(imageMode == 0){
+    stopSongs([song2, song3, song4])
+    // if(song1.isPlaying() == false){
+    //   song1.play();
+
+    // }
+
+    currentSong = song1;
+
+    currentImage = sunny_afternoon;
     document.getElementById("textDisplay3").innerText = '';
     document.getElementById("textDisplay2").innerText = '';
     document.getElementById("textDisplay1").innerText = '';
@@ -46,6 +79,8 @@ function draw() {
   }
   else if(imageMode == 1){ 
     currentImage = house;
+    stopSongs([song1, song3, song4])
+    currentSong = song2;
     document.getElementById("textDisplay3").innerText = '';
     document.getElementById("textDisplay2").innerText = '';
     document.getElementById("textDisplay1").innerText = '';
@@ -55,6 +90,8 @@ function draw() {
   }
   else if(imageMode == 2){ 
     currentImage = street;
+    stopSongs([song1, song2, song4])
+    currentSong = song3;
     document.getElementById("textDisplay3").innerText = '';
     document.getElementById("textDisplay2").innerText = '';
     document.getElementById("textDisplay1").innerText = '';
@@ -63,13 +100,29 @@ function draw() {
   }
   else{ currentImage = balcony;
    // script.update("What you only know is that you need to search for food and beg for care. Or you","black");
+   currentSong = song4;
+   stopSongs([song1, song3, song2])
    document.getElementById("textDisplay3").innerText = '';
    document.getElementById("textDisplay2").innerText = '';
     document.getElementById("textDisplay1").innerText = '';
    document.getElementById("textDisplay3").innerText = "Now you, a stray cat, need to find a way to live in this city.";
   }
+  
+
+
+ 
+
   let transparency = map(walking_cat.currentFrame,0,catFrames.length,0,510);
   if(transparency>255){transparency = 510-transparency;}
+  let volume = map(transparency,0,255,0,1);
+  // let volumn = map(transparency,0,255,0,1);
+  currentSong.setVolume(volume);
+
+  if(currentSong.isPlaying()== false){
+    console.log('1');
+    currentSong.play();
+  }
+
   let positionX = map(walking_cat.currentFrame,0,catFrames.length,0,400);
   let positionY = map(walking_cat.currentFrame,0,catFrames.length,0,300);
   push();
@@ -107,7 +160,6 @@ class Cat{
     scale(this.scaleFactor);
     let currentIMG = this.frames[this.currentFrame]
     image(currentIMG, 0,0)
-    rect(-20, -10, 40, 20);
     pop();
   }
 }
@@ -141,4 +193,8 @@ class Script{
 
 document.getElementById("center-text").onclick = function(){
   window.location.href = '../page2/game.html';
+}
+
+function mousePressed(){
+
 }

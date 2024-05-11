@@ -43,6 +43,11 @@ function draw() {
   image(cat,450,530,length,300);
   pop();
 
+  
+  let currentSong = music;
+  if(currentSong.isPlaying()== false){
+    currentSong.play();
+}
 
 }
 

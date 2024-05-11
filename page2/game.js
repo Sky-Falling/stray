@@ -296,7 +296,7 @@ if(hospital_type ==1){
   instruction(r,"exit",60,'green');
   instruction(h,"to be treated",90,'green');
   if(key == 'h'){
-    image(hospital_treatment,width/2,height/2);
+    image(hospital_animal,width/2,height/2);
     instruction(r,"exit",60,'green');
     
     script.update("You:", "Ahh, now I feel much better.",1000,'black');

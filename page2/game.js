@@ -239,16 +239,16 @@ function draw() {
       currentMusic = cat_begging;
       break;
     case "fail_starve":
-      fail("With the reduced number of rubbish bins in the city, \nit's harder for you to find food.");
+      window.location.href = '../fail_starve/index.html';
       break;
     case "fail_overfead":
-      fail("You don't know how to resist the temptation to eat.\nWith the soaring weight and increased demand for food, it's harder for you to survive");
+      window.location.href = '../fail_overfead/index.html';
       break;
     case "fail_car":
-      fail("Today you want to cross the road as usual.\n But before you can react, the car is already close to you.");
+      window.location.href = '../fail_car/index.html';
       break;
     case "win_score":
-      win("You has been living in this harsh city for so long\n---Undoubtedly, you're slowly getting accustomed to the new chapter in your life.\n Now, when looking into the windows of houses, you no longer have regret\nAs you know, nothing can refine you now!");
+      window.location.href = '../win_score/index.html';
       break;
     case "house":
       house_enter();
@@ -260,10 +260,10 @@ function draw() {
       hospital_enter();
       break;
     case 'fail_sick':
-      fail("Straying in the city, even the smallest disease can be fatal.\n Unluckily, you didn't wait for treatment");
+      window.location.href = '../fail_sick/index.html';
       break;
       case "win_campus_cat":
-      win("You soon catch the heart of these college students\nand you are accepted as the campus cat.\nYour life won't be as comfortable as these domestic cats\n---as you still need to take care of yourself\nBut you're free to go anywhere you like\n It's the life you always dreamed of!");
+        window.location.href = '../win_campus_cat/index.html';
       break;
   }
 
@@ -412,14 +412,14 @@ function house_enter(){
 }
 
 
-function win(SENTENCE) {
-  background("green");
+// function win(SENTENCE) {
+//   background("green");
 
-  textAlign(CENTER);
-  fill("black");
-  textSize(30);
-  text(SENTENCE, width / 2, height / 3);
-}
+//   textAlign(CENTER);
+//   fill("black");
+//   textSize(30);
+//   text(SENTENCE, width / 2, height / 3);
+// }
 
 class Food {
   constructor(positionX,positionY) {
@@ -529,18 +529,18 @@ class Rubbish_bin{
 }
 
 
-function fail(SENTENCE) {
-  background("brown");
-  fill("black");
-  textAlign(CENTER);
-  textSize(60);
-  text("You Lose---Please try again", width / 2, height / 3);
-  textSize(30);
-  text("Your Score:" + String(score), width / 2, height / 1.5);
-  textSize(20);
-  fill("white");
-  text(SENTENCE, width / 2, height / 1.5 + 20);
-}
+// function fail(SENTENCE) {
+//   background("brown");
+//   fill("black");
+//   textAlign(CENTER);
+//   textSize(60);
+//   text("You Lose---Please try again", width / 2, height / 3);
+//   textSize(30);
+//   text("Your Score:" + String(score), width / 2, height / 1.5);
+//   textSize(20);
+//   fill("white");
+//   text(SENTENCE, width / 2, height / 1.5 + 20);
+// }
 
 class Script{
   constructor(){

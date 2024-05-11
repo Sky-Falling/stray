@@ -4,6 +4,7 @@ console.log("heightOfscrollDiv", heightOfscrollDiv)
 function preload(){
 cat = loadImage('cat.png');
 street = loadImage('street.jpeg');
+music = loadSound('RachelTheme.mp3');
 }
 
 
@@ -15,7 +16,7 @@ function setup() {
   canvas.parent("canvasContainer");
   street.resize(width,height);
   cat.resize(150,0);
-  music = loadSound('RachelTheme.mp3');
+
 }
 
 function draw() {

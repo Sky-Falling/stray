@@ -19,7 +19,7 @@ let HP_decay = 0.01;
 let road_line = 660;
 let person_state = false;
 let currentMusic;
-
+let tree_y = 700;
 function preload() {
   h = loadImage('data/h.jpg');
   mouse = loadImage('data/mouse.png');
@@ -112,7 +112,7 @@ function preload() {
 
 function setup() {
 
-  let canvas = createCanvas(800, 800);
+  let canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent("canvasContainer");
   streetline = 0.618 * height;
   
@@ -143,14 +143,14 @@ function setup() {
   cat_left_frames = [];
   for(let i = 0; i < 92; i++){
     let imgPath = "walking_cat_left/trim.1ACDE6D3-9803-492A-A950-6ED9E06DE795-" + i + ".png";
-    console.log(imgPath);
+  
     let currentIMG = loadImage(imgPath);
     cat_left_frames.push(currentIMG)
   }
   cat_right_frames = [];
   for(let i = 0; i < 92; i++){
     let imgPath = "walking_cat_right/trim.1ACDE6D3-9803-492A-A950-6ED9E06DE795-" + i + ".png";
-    console.log(imgPath);
+
     let currentIMG = loadImage(imgPath);
     cat_right_frames.push(currentIMG)
   }
@@ -163,15 +163,15 @@ mouse.resize(30,30);
   r.resize(30,30);
   wasd.resize(60,0);
   hospital_treatment.resize(width,0);
-  hospital_animal.resize(0,height);
-  hospital_human.resize(0,height);
-  person_sitting.resize(175,0);
+  hospital_animal.resize(width*1.5,0);
+  hospital_human.resize(width*1.5,0);
+  person_sitting.resize(230,0);
   cat_food_full.resize(food_size*2,food_size);
   cat_food_empty.resize(food_size*2,food_size);
-  school_center2.resize(0,height);
-  school_center1.resize(0,height);
-  school_right.resize(0,height);
-  school_left.resize(0,height);
+  school_center2.resize(width,0);
+  school_center1.resize(width,0);
+  school_right.resize(width,0);
+  school_left.resize(width,0);
   rubbish_bin.resize(150,0);
   glass.resize(width*2,0);
   room.resize(width*1.5,0);
@@ -216,7 +216,7 @@ mouse.resize(30,30);
 }
 
 function draw() {
-
+  console.log(mouseX,mouseY);
   background('black');
   energy -= HP_decay;
   
@@ -342,16 +342,16 @@ function school_enter(){
     if(latestNewKeyPress == 'a'){
       image(school_left,0,0);
 
-      cat_food_display(1,410  ,500 )
+      cat_food_display(1,1214,547 )
       instruction(mouse,"click food bowl",60,'green');
       instruction(r,"exit",85,'green')
     }
     else if(latestNewKeyPress == 'd'){
       image(school_right,0,0);
       
-      cat_food_display(2,730  ,760)
-      cat_food_display(3,70 , 673 )
-      cat_food_display(4,300, 494.5 )
+      cat_food_display(2,1067,852)
+      cat_food_display(3,903,563 )
+      cat_food_display(4,360,602 )
 
       instruction(mouse,"click the food on the ground",60,'green');
       instruction(r,"exit",85,'green')
@@ -361,12 +361,12 @@ function school_enter(){
       instruction(r,'exit',90,'green');
       if(person_state == true){
         imageMode(CENTER);
-        image(person_sitting,550,500);
+        image(person_sitting,871,720);
         imageMode(CORNER);
         script.update("Man:", "There's a cat!!\nHello there, little cat",3500,'black');
         instruction(mouse,'play with him',60,'red');
         
-        if(mouseIsPressed&&dist(mouseX,0,550,0)<person_sitting.width/2&&dist(0,mouseY,0,500)<person_sitting.height/2){
+        if(mouseIsPressed&&dist(mouseX,0,871,0)<person_sitting.width/2&&dist(0,mouseY,0,720)<person_sitting.height/2){
           state = 'win_campus_cat';
         }
       }
@@ -376,8 +376,7 @@ function school_enter(){
     else if(latestNewKeyPress == 'r'){state = 'ongoing';
     script.update("You:", "Anyway, it's time to continue searching for food.",3500,'black');
     }
-    console.log(mouseX,mouseY);
-
+  
 }
 
 function house_enter(){
@@ -444,7 +443,7 @@ class Food {
   detect() {
     if (key == "q") {
       character.interaction = true;
-      console.log("this.food.width/2");
+    
     } else {
       character.interaction = false;
     }
@@ -504,7 +503,7 @@ function instruction(IMAGE,SENTENCE,Y,COLOR){
 class Rubbish_bin{
   constructor(positionX){
     this.x = positionX;
-    this.y = 625;
+    this.y = tree_y+30;
     this.foodVal =floor(random(0,4));
     this.foods = [];
     for(let i = 0 ;i< this.foodVal; i++){
@@ -576,8 +575,7 @@ class Script{
 
 function ongoing() {
   background("brown");
-  console.log(mouseY);
-  
+
 
   let day_night = floor((millis() / dayLength) % 2);
   if (day_night == 0) {
@@ -592,7 +590,7 @@ function ongoing() {
 
   building_display();
 
-  if (character.y < 585) {
+  if (character.y < tree_y) {
     // draw_cat();
     character.update();
   character.display();
@@ -649,7 +647,7 @@ function draw_car() {
 function draw_tree() {
   for (let i = 0; i < buildings.length; i++) {
     imageMode(CORNER);
-    image(tree2, buildings[i].x - tree2.width / 2, 600 - tree2.height);
+    image(tree2, buildings[i].x - tree2.width / 2, tree_y - tree2.height);
   }
 }
 
@@ -689,7 +687,7 @@ function keyPressed() {
 class Cat {
   constructor() {
     this.x = width / 2+20;
-    this.y = 550;
+    this.y = 650;
     this.speedY = 0;
     this.speedX = 0;
     this.direction = "left";
@@ -714,7 +712,7 @@ class Cat {
     }
 
     if (keyIsPressed) {
-      if (key == "w" && this.y > 500) {
+      if (key == "w" && this.y > 580) {
         this.speedY = -1;
       } else if (latestNewKeyPress == "s" && this.y < height) {
         this.speedY = 1;
@@ -903,7 +901,7 @@ class Stars {
 class Car {
   constructor() {
     this.x = -100;
-    this.y = random(680, height);
+    this.y = random(780, height);
     this.speed = random(7, 10);
   }
 
